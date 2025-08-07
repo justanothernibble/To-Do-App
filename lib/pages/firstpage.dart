@@ -12,6 +12,7 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   int chosenPage = 0;
   int _counter = 0;
+  List<String> allTasksList = [];
 
   void increment() {
     setState(() {
@@ -29,7 +30,11 @@ class _FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       Completed(),
-      AllTasks(counter: _counter, increment: increment),
+      AllTasks(
+        counter: _counter,
+        increment: increment,
+        allTasksList: allTasksList,
+      ),
     ];
 
     return Scaffold(

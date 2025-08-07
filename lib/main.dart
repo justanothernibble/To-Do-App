@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/pages/firstpage.dart';
-import 'package:flutter_application_2/pages/profile.dart';
-import 'package:flutter_application_2/pages/settings.dart';
+import 'package:flutter_application_2/pages/alltasks.dart';
+import 'package:flutter_application_2/pages/completed.dart';
 
 
 void main() {
@@ -24,8 +24,8 @@ class _MyAppState extends State<MyApp> {
       home: FirstPage(),
       routes: {
         '/firstpage': (context) => FirstPage(),
-        '/settingspage': (context) => SettingsPage(),
-        'profilepage:': (context) => ProfilePage()
+        '/completed': (context) => Completed(),
+        '/alltasks:': (context) => AllTasks(counter: 0, increment: () {  },)
         },
     );
   }

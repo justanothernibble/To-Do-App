@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/profile.dart';
-import 'package:flutter_application_2/pages/settings.dart';
+import 'package:flutter_application_2/pages/alltasks.dart';
+import 'package:flutter_application_2/pages/completed.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -10,24 +10,30 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-
   int chosenPage = 0;
-  
-  void navigateBottomBar(int pageIndex){
+  int _counter = 0;
+
+  void increment() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  void navigateBottomBar(int pageIndex) {
     setState(() {
       chosenPage = pageIndex;
     });
   }
 
-  List pages = [
-    SettingsPage(),
-    ProfilePage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      Completed(),
+      AllTasks(counter: _counter, increment: increment),
+    ];
+
     return Scaffold(
-      appBar: AppBar(title: Text("1st Page")),
+      appBar: AppBar(title: Text("To-Do App")),
       body: pages[chosenPage],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: chosenPage,
@@ -37,17 +43,12 @@ class _FirstPageState extends State<FirstPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
-            
+            label: 'Completed',
           ),
 
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ]
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'AllTasks'),
+        ],
       ),
-
     );
   }
 }

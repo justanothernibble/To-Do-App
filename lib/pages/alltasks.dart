@@ -17,6 +17,11 @@ class AllTasks extends StatefulWidget {
 }
 
 class _AllTasksState extends State<AllTasks> {
+  String? priority = "";
+  bool isPriorityDone = false; // priority is required
+  bool isNameDone = false; // name is required
+  // description is allowed to be empty
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,6 +50,13 @@ class _AllTasksState extends State<AllTasks> {
                                 icon: Icon(Icons.task),
                                 hintText: "Name",
                               ),
+                              onChanged: (value) {
+                                if (value.trim().isNotEmpty) {
+                                  isNameDone = true;
+                                } else {
+                                  isNameDone = false;
+                                }
+                              },
                             ),
                           ),
                           SizedBox(
@@ -61,6 +73,13 @@ class _AllTasksState extends State<AllTasks> {
                             // Priority Input
                             width: 200,
                             child: DropdownButtonFormField(
+                              onChanged: (value) {
+                                if (value?.isNotEmpty ?? false) {
+                                  isPriorityDone = true;
+                                } else {
+                                  isPriorityDone = false;
+                                }
+                              },
                               hint: Text("Priority"),
                               items: [
                                 // Low Priority Green
@@ -118,13 +137,32 @@ class _AllTasksState extends State<AllTasks> {
                                   ),
                                 ),
                               ],
-                              onChanged: (value) {},
                               value: null,
                             ),
                           ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text("Close"),
+                          Row(
+                            children: [Container(height: 10)],
+                          ), // 10 pixel buffer
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("Close"),
+                              ),
+                              Container(width: 10),
+                              AbsorbPointer(
+                                absorbing:
+                                    isNameDone == false &&
+                                    isPriorityDone == false,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Submit"),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

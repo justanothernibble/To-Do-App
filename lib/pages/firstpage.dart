@@ -11,14 +11,7 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   int chosenPage = 0;
-  int _counter = 0;
-  List<String> allTasksList = [];
-
-  void increment() {
-    setState(() {
-      _counter++;
-    });
-  }
+  List<List<String>> allTasksList = [];
 
   void navigateBottomBar(int pageIndex) {
     setState(() {
@@ -26,15 +19,17 @@ class _FirstPageState extends State<FirstPage> {
     });
   }
 
+  void addTask(List<String> task) {
+    setState(() {
+      allTasksList.add(task);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       Completed(),
-      AllTasks(
-        counter: _counter,
-        increment: increment,
-        allTasksList: allTasksList,
-      ),
+      AllTasks(allTasksList: allTasksList),
     ];
 
     return Scaffold(

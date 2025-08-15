@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_application_2/pages/firstpage.dart';
 import 'package:flutter_application_2/pages/alltasks.dart';
 import 'package:flutter_application_2/pages/completed.dart';
+import 'package:flutter_application_2/services/supabase_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "lib/.env"); // Load api keys
+  await SupabaseService.initialize(); // Initialize Supabase
   runApp(MyApp());
 }
 
@@ -17,14 +24,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FirstPage(),
-      routes: {
-        '/firstpage': (context) => FirstPage(),
-        '/completed': (context) => Completed(),
-        '/alltasks:': (context) => AllTasks(allTasksList: []),
-      },
+    return MultiProvider(
+      providers: [
+        Provider<SupabaseClient>(create: (_) => SupabaseService().client),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "To-Do App",
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: FirstPage(),
+        routes: {
+          '/firstpage': (context) => FirstPage(),
+          '/completed': (context) => Completed(),
+          '/alltasks:': (context) => AllTasks(allTasksList: []),
+        },
+      ),
     );
   }
 }

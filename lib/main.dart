@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/firstpage': (context) => FirstPage(),
           '/completed': (context) => Completed(),
-          '/alltasks:': (context) => AllTasks(allTasksList: []),
+          '/alltasks:': (context) => AllTasks(filter: 'All'),
         },
       ),
     );

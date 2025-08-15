@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import '../services/supabase_service.dart';
 
 class AllTasks extends StatefulWidget {
-  final List<List<String>> allTasksList;
+  final String filter; // 'All', 'Incomplete', 'Completed'
 
-  const AllTasks({super.key, required this.allTasksList});
+  const AllTasks({super.key, required this.filter});
 
   @override
   State<AllTasks> createState() => _AllTasksState();
@@ -228,12 +228,16 @@ class _AllTasksState extends State<AllTasks> {
     }
   }
 
-  Future<void> _addTask(String name, String description, String prioity) async {
+  Future<void> _addTask(
+    String name,
+    String description,
+    String priority,
+  ) async {
     try {
       await _supabaseService.createTask(
         name: name,
         description: description,
-        priority: prioity,
+        priority: priority,
       );
       await _loadTasks();
     } catch (e) {
@@ -246,13 +250,14 @@ class _AllTasksState extends State<AllTasks> {
     }
   }
 
-  Future<void> _toggleTaskStatus(int index) async {
+  Future<void> _toggleTaskStatusById(dynamic taskId) async {
     try {
+      final index = _tasks.indexWhere((t) => t['id'] == taskId);
+      if (index == -1) return;
       final task = _tasks[index];
       final isComplete = task['status'] == 'completed';
       await _supabaseService.toggleTaskCompletion(task['id'], !isComplete);
       setState(() {
-        // Update the task status
         _tasks[index]['status'] = isComplete ? 'incomplete' : 'completed';
       });
     } catch (e) {
@@ -277,6 +282,20 @@ class _AllTasksState extends State<AllTasks> {
       // Loading indicator
       return const Center(child: CircularProgressIndicator());
     }
+    // Apply filter
+    List<Map<String, dynamic>> visibleTasks;
+    switch (widget.filter) {
+      case 'Completed':
+        visibleTasks = _tasks.where((t) => t['status'] == 'completed').toList();
+        break;
+      case 'Incomplete':
+        visibleTasks = _tasks
+            .where((t) => t['status'] == 'incomplete')
+            .toList();
+        break;
+      default:
+        visibleTasks = _tasks;
+    }
     return Column(
       children: [
         Row(
@@ -297,15 +316,15 @@ class _AllTasksState extends State<AllTasks> {
           ],
         ),
         Expanded(
-          child: _tasks.isEmpty
+          child: visibleTasks.isEmpty
               ? const Center(child: Text("No tasks. Add your first"))
               : Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ListView.builder(
                     controller: _scrollController,
-                    itemCount: _tasks.length,
+                    itemCount: visibleTasks.length,
                     itemBuilder: (context, index) {
-                      final task = _tasks[index];
+                      final task = visibleTasks[index];
                       final bool hasDescription =
                           task['description'].isNotEmpty;
                       final bool isComplete = task['status'] == 'completed';
@@ -355,7 +374,7 @@ class _AllTasksState extends State<AllTasks> {
                                   child: Checkbox(
                                     value: isComplete,
                                     onChanged: (_) {
-                                      _toggleTaskStatus(index);
+                                      _toggleTaskStatusById(task['id']);
                                     },
                                   ),
                                 ),

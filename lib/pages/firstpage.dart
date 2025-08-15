@@ -10,45 +10,43 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  int chosenPage = 0;
-  List<List<String>> allTasksList = [];
+  static const int allInt = 0;
+  static const int completedInt = 1;
+  static const int incompletedInt = 2;
+  int? _selectedFilter = allInt;
 
-  void navigateBottomBar(int pageIndex) {
+  void _onFilterChanged(int? value) {
     setState(() {
-      chosenPage = pageIndex;
-    });
-  }
-
-  void addTask(List<String> task) {
-    setState(() {
-      allTasksList.add(task);
+      _selectedFilter = value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [
-      Completed(),
-      AllTasks(allTasksList: allTasksList),
-    ];
-
+    Widget currentPage;
+    if (_selectedFilter == allInt) {
+      currentPage = const AllTasks(filter: 'All');
+    } else if (_selectedFilter == completedInt) {
+      currentPage = const AllTasks(filter: 'Completed');
+    } else {
+      currentPage = const AllTasks(filter: 'Incomplete');
+    }
     return Scaffold(
-      appBar: AppBar(title: Text("To-Do App")),
-      body: pages[chosenPage],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: chosenPage,
-        onTap: (value) {
-          navigateBottomBar(value);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Completed',
-          ),
-
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'AllTasks'),
-        ],
+      appBar: AppBar(
+        title: const Text("To-Do App"),
+        leading: PopupMenuButton<int>(
+          tooltip: 'Filter',
+          icon: const Icon(Icons.filter_list),
+          initialValue: _selectedFilter,
+          onSelected: _onFilterChanged,
+          itemBuilder: (context) => const [
+            PopupMenuItem(value: allInt, child: Text('All')),
+            PopupMenuItem(value: completedInt, child: Text('Completed')),
+            PopupMenuItem(value: incompletedInt, child: Text('Incomplete')),
+          ],
+        ),
       ),
+      body: currentPage,
     );
   }
 }

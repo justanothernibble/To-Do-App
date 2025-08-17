@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/alltasks.dart';
-import 'package:flutter_application_2/pages/completed.dart';
+import 'package:flutter_application_2/pages/task_page.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -25,11 +24,11 @@ class _FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     Widget currentPage;
     if (_selectedFilter == allInt) {
-      currentPage = const AllTasks(filter: 'All');
+      currentPage = const TaskPage(filter: 'All');
     } else if (_selectedFilter == completedInt) {
-      currentPage = const AllTasks(filter: 'Completed');
+      currentPage = const TaskPage(filter: 'Completed');
     } else {
-      currentPage = const AllTasks(filter: 'Incomplete');
+      currentPage = const TaskPage(filter: 'Incomplete');
     }
     return Scaffold(
       appBar: AppBar(

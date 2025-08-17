@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/supabase_service.dart';
 
-class AllTasks extends StatefulWidget {
+class TaskPage extends StatefulWidget {
   final String filter; // 'All', 'Incomplete', 'Completed'
 
-  const AllTasks({super.key, required this.filter});
+  const TaskPage({super.key, required this.filter});
 
   @override
-  State<AllTasks> createState() => _AllTasksState();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
 class _AddTaskDialog extends StatefulWidget {
@@ -182,7 +182,7 @@ class _AddTaskDialogState extends State<_AddTaskDialog> {
   }
 }
 
-class _AllTasksState extends State<AllTasks> {
+class _TaskPageState extends State<TaskPage> {
   final _scrollController = ScrollController();
   bool _isLoading = true;
   final List<Map<String, dynamic>> _tasks = [];

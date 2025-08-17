@@ -3,8 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_application_2/pages/firstpage.dart';
-import 'package:flutter_application_2/pages/alltasks.dart';
-import 'package:flutter_application_2/pages/completed.dart';
+import 'package:flutter_application_2/pages/task_page.dart';
 import 'package:flutter_application_2/services/supabase_service.dart';
 
 void main() async {
@@ -38,8 +37,7 @@ class _MyAppState extends State<MyApp> {
         home: FirstPage(),
         routes: {
           '/firstpage': (context) => FirstPage(),
-          '/completed': (context) => Completed(),
-          '/alltasks:': (context) => AllTasks(filter: 'All'),
+          '/taskpage': (context) => TaskPage(filter: 'All'),
         },
       ),
     );
